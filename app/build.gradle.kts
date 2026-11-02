@@ -43,7 +43,6 @@ android {
 }
 
 dependencies {
-    implementation("io.getstream:photoview:1.0.3")
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.coil.compose)

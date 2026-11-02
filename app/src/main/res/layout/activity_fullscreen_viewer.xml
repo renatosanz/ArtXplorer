@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <io.getstream.photoview.PhotoView
+    <com.renatosanz.artxplorer.presentation.screens.fullscreen.ZoomableImageView
         android:id="@+id/photoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
