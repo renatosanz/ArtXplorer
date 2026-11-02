@@ -2,10 +2,14 @@ package com.example.artxplorer.presentation.screens.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
+import coil3.request.error
+import coil3.request.placeholder
+import com.example.artxplorer.R
 import com.example.artxplorer.data.remote.api.SearchResult
 import com.example.artxplorer.data.common.decodeBase64ToDrawable
 import com.example.artxplorer.databinding.ItemSearchArtworkResultPreviewBinding
@@ -33,9 +37,33 @@ class SearchArtworkResultAdapter() :
 
         fun bind(searchResult: SearchResult) {
             binding.title.text = searchResult.title
+            binding.artist.text = searchResult.artistTitle
+            binding.artist.isVisible = !searchResult.artistTitle.isNullOrBlank()
+            binding.date.text = searchResult.dateDisplay
+            binding.date.isVisible = !searchResult.dateDisplay.isNullOrBlank()
+
             binding.root.setOnClickListener { onArtworkClick(searchResult) }
-            binding.btnShowMetadata.setOnClickListener { this.onInfoBtnClick(searchResult) }
-            binding.artworkPreview.load(decodeBase64ToDrawable(searchResult.thumbnail?.lqip))
+            binding.btnShowMetadata.setOnClickListener { onInfoBtnClick(searchResult) }
+
+            val imageId = searchResult.imageId
+            val lqip = decodeBase64ToDrawable(searchResult.thumbnail?.lqip)
+            if (imageId.isNullOrBlank()) {
+                // Old cached results only carry the tiny base64 preview.
+                binding.artworkPreview.load(lqip ?: R.drawable.no_image_fallback)
+                return
+            }
+            // 400px is enough for this small card, no need to pull the full-size image.
+            // The lqip covers the load and stays if the image request fails.
+            binding.artworkPreview.load(
+                "https://www.artic.edu/iiif/2/$imageId/full/400,/0/default.jpg"
+            ) {
+                if (lqip != null) {
+                    placeholder(lqip)
+                    error(lqip)
+                } else {
+                    error(R.drawable.no_image_fallback)
+                }
+            }
         }
     }
 

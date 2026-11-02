@@ -23,14 +23,20 @@ data class SearchResult(
     val score: Double,
     val id: Long,
     @SerializedName("api_model")
-    val apiModel: String,
+    val apiModel: String?,
     @SerializedName("api_link")
-    val apiLink: String,
+    val apiLink: String?,
     val title: String,
     val thumbnail: Thumbnail?,
-    val timestamp: String,
+    val timestamp: String?,
     @SerializedName("is_boosted")
-    val isBoosted: Boolean,
+    val isBoosted: Boolean?,
+    @SerializedName("image_id")
+    val imageId: String?,
+    @SerializedName("artist_title")
+    val artistTitle: String?,
+    @SerializedName("date_display")
+    val dateDisplay: String?,
 )
 
 data class Thumbnail(

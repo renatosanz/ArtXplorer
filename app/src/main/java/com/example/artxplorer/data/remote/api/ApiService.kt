@@ -14,6 +14,11 @@ private const val ARTWORK_DETAIL_FIELDS =
 
 private const val RECOMMENDATION_FIELDS = "id,title,image_id,date_display,artist_title"
 
+// image_id is not part of the default search payload; thumbnail keeps the
+// alt text used by the result dialog.
+private const val SEARCH_RESULT_FIELDS =
+    "id,title,image_id,artist_title,date_display,thumbnail"
+
 interface ApiService {
     @GET("artworks")
     suspend fun getHomePage(
@@ -36,5 +41,8 @@ interface ApiService {
     ): ArtistArtworks
 
     @GET(value = "artworks/search")
-    suspend fun searchArtworks(@Query(value = "q") queryString: String): SearchArtworks
+    suspend fun searchArtworks(
+        @Query(value = "q") queryString: String,
+        @Query("fields") fields: String = SEARCH_RESULT_FIELDS
+    ): SearchArtworks
 }

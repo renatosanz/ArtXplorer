@@ -1,5 +1,6 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -10,55 +11,79 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/artwork_preview"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:background="?attr/colorOnSurfaceVariant"
+            android:importantForAccessibility="no"
             android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:fontFamily="@font/eb_garamond_font"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="Starry Night and the Astronauts" />
 
-            <Space
-                android:layout_width="12dp"
-                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:text="Alma Thomas"
+                tools:visibility="visible" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnShowMetadata"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="View saved artworks"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                app:cornerRadius="16dp"
-                app:icon="@drawable/info_24"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:iconSize="28dp" />
-
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:text="1972"
+                tools:visibility="visible" />
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShowMetadata"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/artwork_info"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/info_24"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="28dp"
+            app:iconTint="?attr/colorOnSurfaceVariant" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

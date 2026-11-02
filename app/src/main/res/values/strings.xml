@@ -32,6 +32,7 @@
     <string name="more_by_artist">More by %1$s</string>
     <string name="more_artworks">More artworks</string>
     <string name="recommended_artwork">Recommended artwork</string>
+    <string name="artwork_info">Artwork information</string>
     <string name="buy_me_a_coffee">Buy me a coffee</string>
     <string name="no_app_found">No app available to open this link</string>
 </resources>

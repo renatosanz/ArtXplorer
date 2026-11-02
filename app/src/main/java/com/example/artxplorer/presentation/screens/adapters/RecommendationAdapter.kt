@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
+import coil3.request.error
 import com.example.artxplorer.R
 import com.example.artxplorer.databinding.ItemRecommendationBinding
 import com.example.artxplorer.domain.model.Artwork
@@ -36,7 +37,9 @@ class RecommendationAdapter :
             // 400px is enough for this small card, no need to pull the full-size image
             binding.recommendationImage.load(
                 "https://www.artic.edu/iiif/2/$imageId/full/400,/0/default.jpg"
-            )
+            ) {
+                error(R.drawable.no_image_fallback)
+            }
         }
     }
 
