@@ -47,7 +47,6 @@ class ArtworkDetailsViewModel(
             _recommendations.value = emptyList()
             var artistId: Long? = null
             getArtworkDetailUseCase(artworkId).fold(onSuccess = {
-                print("artwork recieved: $it")
                 when (it) {
                     is GetArtworkResult.FoundOnLocal -> {
                         _isSaved.value = true
@@ -66,7 +65,7 @@ class ArtworkDetailsViewModel(
                     }
                 }
             }, onFailure = {
-                _error.value = it.message
+                _error.value = "Couldn't load the artwork. Please try again."
             })
             _loading.value = false
             // Secondary content: failures just leave the section hidden.
@@ -87,8 +86,8 @@ class ArtworkDetailsViewModel(
                             _isSaved.value = saved
                             _msgToast.value = "Artwork Saved"
                         },
-                        onFailure = { _error.value = it.message })
-                }, onFailure = { _error.value = it.message })
+                        onFailure = { _error.value = "Couldn't save the artwork. Please try again." })
+                }, onFailure = { _error.value = "Couldn't save the artwork. Please try again." })
             }
         } else {
             _error.value = "No hay datos de la obra para guardar todavía."

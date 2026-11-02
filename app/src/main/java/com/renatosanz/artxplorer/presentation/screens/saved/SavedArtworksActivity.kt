@@ -2,13 +2,13 @@ package com.renatosanz.artxplorer.presentation.screens.saved
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.renatosanz.artxplorer.databinding.ActivitySavedArtworksBinding
 import com.renatosanz.artxplorer.databinding.AlertDialogDeleteSavedArtworkBinding
+import com.renatosanz.artxplorer.logDebug
 import com.renatosanz.artxplorer.presentation.screens.adapters.SavedArtworkAdapter
 import com.renatosanz.artxplorer.presentation.screens.detail.ArtworkDetailsActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -47,7 +47,7 @@ class SavedArtworksActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.savedArtworks.observe(this) { artworks ->
-            Log.d("SavedArtworksActivity", "binding data to ui (artworks: $artworks)")
+            logDebug("SavedArtworksActivity", "binding data to ui (artworks: $artworks)")
             adapter.setSavedArtworks(artworks)
             adapter.setCallback { artwork ->
                 val context = binding.root.context

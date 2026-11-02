@@ -7,12 +7,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.toBitmap
+import com.renatosanz.artxplorer.logDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -41,10 +41,10 @@ suspend fun saveImageToGallery(context: Context, imageUrl: String, title: String
             context.contentResolver.openOutputStream(uri)?.use { stream ->
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             }
-            Log.d("saveImageToGallery", "imagen guardada correctamente: $uri")
+            logDebug("saveImageToGallery", "imagen guardada correctamente: $uri")
             Result.success(uri)
         } catch (e: Exception) {
-            Log.d("saveImageToGallery", "error al guardar imagen: ${e.message}")
+            logDebug("saveImageToGallery", "error al guardar imagen: ${e.message}")
             Result.failure(e)
         }
     }

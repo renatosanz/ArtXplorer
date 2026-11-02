@@ -1,12 +1,12 @@
 package com.renatosanz.artxplorer.presentation.screens.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import com.renatosanz.artxplorer.databinding.ItemSavedArtworkBinding
 import com.renatosanz.artxplorer.domain.model.Artwork
+import com.renatosanz.artxplorer.logDebug
 
 class SavedArtworkAdapter() : RecyclerView.Adapter<SavedArtworkAdapter.ViewHolder>() {
     private var savedArtworks: List<Artwork>? = null
@@ -32,7 +32,7 @@ class SavedArtworkAdapter() : RecyclerView.Adapter<SavedArtworkAdapter.ViewHolde
         private val onArtworkDeleteClick: (Artwork) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(artwork: Artwork) {
-            Log.d("SavedArtworkAdapter", "Binding data: $artwork")
+            logDebug("SavedArtworkAdapter", "Binding data: $artwork")
             val imageUrl = "https://www.artic.edu/iiif/2/${artwork.imageId}/full/843,/0/default.jpg"
 
             binding.tvSavedTitle.text = artwork.title

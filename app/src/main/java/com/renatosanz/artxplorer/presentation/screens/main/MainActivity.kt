@@ -3,7 +3,6 @@ package com.renatosanz.artxplorer.presentation.screens.main
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -19,6 +18,7 @@ import com.renatosanz.artxplorer.databinding.ActivityHomepageBinding
 import com.renatosanz.artxplorer.databinding.AlertDialogDeleteSavedArtworkBinding
 import com.renatosanz.artxplorer.databinding.DialogSearchArtworkMetadataBinding
 import com.renatosanz.artxplorer.domain.model.Artwork
+import com.renatosanz.artxplorer.logDebug
 import com.renatosanz.artxplorer.presentation.screens.adapters.ArtworkAdapter
 import com.renatosanz.artxplorer.presentation.screens.adapters.SearchArtworkResultAdapter
 import com.renatosanz.artxplorer.presentation.screens.detail.ArtworkDetailsActivity
@@ -192,14 +192,14 @@ class MainActivity : AppCompatActivity() {
         binding.searchView.setupWithSearchBar(binding.seachBar)
         binding.searchView.editText.setOnEditorActionListener { v, actionId, event ->
             val query = binding.searchView.text.toString()
-            Log.d("MainActivity", "Query String: $query")
+            logDebug("MainActivity", "Query String: $query")
             viewModel.search(query)
             false
         }
     }
 
     private fun setupRandomArtwork(artwork: Artwork) {
-        Log.d("MainActivity", "setting up random artwork")
+        logDebug("MainActivity", "setting up random artwork")
         val imageUrl = "https://www.artic.edu/iiif/2/${artwork.imageId}/full/843,/0/default.jpg"
         binding.randomArtworkTitle.text = artwork.title
         binding.randomArtworkArtist.text = artwork.artist

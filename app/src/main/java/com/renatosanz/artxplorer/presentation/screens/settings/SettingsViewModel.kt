@@ -31,7 +31,7 @@ class SettingsViewModel(
                 File(context.filesDir, "artworks").deleteRecursively()
                 _cleared.value = true
             }, onFailure = { exception ->
-                _error.value = exception.message
+                _error.value = "Couldn't clear saved artworks. Please try again."
             })
             _loading.value = false
         }

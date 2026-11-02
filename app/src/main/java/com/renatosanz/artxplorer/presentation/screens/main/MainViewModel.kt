@@ -48,7 +48,7 @@ class MainViewModel(
                     loadRandomArtwork(data.pagination.total)
                 }
             }, onFailure = { exception ->
-                _error.value = exception.message
+                _error.value = "Couldn't load artworks. Please try again."
             })
             _loading.value = false
         }
@@ -60,7 +60,7 @@ class MainViewModel(
         viewModelScope.launch {
             getRandomImage(maxRandom).fold(
                 onSuccess = { data -> _randomArtwork.value = data },
-                onFailure = { exception -> _error.value = exception.message })
+                onFailure = { exception -> _error.value = "Couldn't load an artwork. Please try again." })
         }
     }
 
@@ -68,7 +68,7 @@ class MainViewModel(
         viewModelScope.launch {
             searchArtworkUseCase(query).fold(
                 onSuccess = { data -> _searchArtworksResults.value = data },
-                onFailure = { e -> _error.value = e.message }
+                onFailure = { e -> _error.value = "Search failed. Please try again." }
             )
         }
     }

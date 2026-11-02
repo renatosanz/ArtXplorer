@@ -1,6 +1,5 @@
 package com.renatosanz.artxplorer.domain.repository
 
-import android.util.Log
 import com.renatosanz.artxplorer.data.local.dao.ArtworkDao
 import com.renatosanz.artxplorer.data.local.entities.ArtworkEntity
 import com.renatosanz.artxplorer.data.remote.api.ApiService
@@ -10,6 +9,7 @@ import com.renatosanz.artxplorer.data.remote.dto.toDomain
 import com.renatosanz.artxplorer.data.repository.ArtworkRepository
 import com.renatosanz.artxplorer.data.repository.GetArtworkResult
 import com.renatosanz.artxplorer.domain.model.Artwork
+import com.renatosanz.artxplorer.logDebug
 import kotlin.random.Random
 
 // data/repository/UserRepositoryImpl.kt
@@ -19,29 +19,29 @@ class ArtworkRepositoryImpl(
 
     override suspend fun saveArtwork(artwork: ArtworkEntity): Result<Boolean> {
         return try {
-            Log.d(
+            logDebug(
                 "ArtworkRepositoryImpl",
                 "saving artwork ArtworkRepositoryImpl.saveArtwork: $artwork"
             )
             artworkDao.insertAll(artwork)
-            Log.d("ArtworkRepositoryImpl", "result : $artwork")
+            logDebug("ArtworkRepositoryImpl", "result : $artwork")
             Result.success(true)
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "error: $e")
+            logDebug("ArtworkRepositoryImpl", "error: $e")
             Result.failure(e)
         }
     }
 
     override suspend fun deleteArtwork(artwork: ArtworkEntity) {
         try {
-            Log.d(
+            logDebug(
                 "ArtworkRepositoryImpl",
                 "deleting artwork ArtworkRepositoryImpl.deleteArtwork: $artwork"
             )
             artworkDao.delete(artwork)
-            Log.d("ArtworkRepositoryImpl", "result : $artwork")
+            logDebug("ArtworkRepositoryImpl", "result : $artwork")
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "error: $e")
+            logDebug("ArtworkRepositoryImpl", "error: $e")
         }
     }
 
@@ -50,46 +50,46 @@ class ArtworkRepositoryImpl(
             artworkDao.deleteAll()
             Result.success(true)
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "error: $e")
+            logDebug("ArtworkRepositoryImpl", "error: $e")
             Result.failure(e)
         }
     }
 
     override suspend fun getArtwork(id: Long): Result<GetArtworkResult> {
         return try {
-            Log.d(
+            logDebug(
                 "ArtworkRepositoryImpl",
                 "retrieving artwork on ArtworkRepositoryImpl.getArtwork: $id"
             )
 
             val dataFromDB = artworkDao.getById(id);
             if (dataFromDB != null) {
-                Log.d(
+                logDebug(
                     "ArtworkRepositoryImpl", "Artwork found on db! (id: ${dataFromDB.id})"
                 )
                 return Result.success(GetArtworkResult.FoundOnLocal(dataFromDB))
             }
 
             val artwork = apiService.getArtwork(id).data.toDomain()
-            Log.d("ArtworkRepositoryImpl", "result : $artwork")
+            logDebug("ArtworkRepositoryImpl", "result : $artwork")
 
             Result.success(GetArtworkResult.FoundOnApi(artwork))
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "error: $e")
+            logDebug("ArtworkRepositoryImpl", "error: $e")
             Result.failure(e)
         }
     }
 
     override suspend fun getRandomArtwork(randomMax: Long): Result<Artwork> {
         val rand = Random(System.currentTimeMillis())
-        Log.d(this.javaClass.toString(), "getting random image")
+        logDebug(this.javaClass.toString(), "getting random image")
         repeat(10) {
             try {
                 val artworkId = rand.nextLong() % randomMax
-                Log.d(this.javaClass.toString(), "Trying id:$artworkId ...")
+                logDebug(this.javaClass.toString(), "Trying id:$artworkId ...")
                 return Result.success(apiService.getArtwork(artworkId).data.toDomain())
             } catch (e: Exception) {
-                Log.d("ArtworkRepositoryImpl", "trying again...")
+                logDebug("ArtworkRepositoryImpl", "trying again...")
             }
         }
         return Result.failure(Exception("Failed after 3 attempts"))
@@ -136,7 +136,7 @@ class ArtworkRepositoryImpl(
                 }
             Result.success(picks)
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "recommendations error: $e")
+            logDebug("ArtworkRepositoryImpl", "recommendations error: $e")
             Result.failure(e)
         }
     }
@@ -152,17 +152,17 @@ class ArtworkRepositoryImpl(
 
     override suspend fun searchArtworkByName(query: String): Result<SearchArtworks> {
         return try {
-            Log.d(
+            logDebug(
                 "ArtworkRepositoryImpl",
                 "search for query: $query"
             )
 
             val response = apiService.searchArtworks(query)
-            Log.d("ArtworkRepositoryImpl", " search result : $response")
+            logDebug("ArtworkRepositoryImpl", " search result : $response")
 
             Result.success(response)
         } catch (e: Exception) {
-            Log.d("ArtworkRepositoryImpl", "error: $e")
+            logDebug("ArtworkRepositoryImpl", "error: $e")
             Result.failure(e)
         }
     }

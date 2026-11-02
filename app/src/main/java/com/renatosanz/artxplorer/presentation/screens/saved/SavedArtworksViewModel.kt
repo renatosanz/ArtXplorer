@@ -1,6 +1,5 @@
 package com.renatosanz.artxplorer.presentation.screens.saved
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ import com.renatosanz.artxplorer.data.local.entities.ArtworkEntity
 import com.renatosanz.artxplorer.domain.model.Artwork
 import com.renatosanz.artxplorer.domain.usecase.DeleteArtworkLocalUseCase
 import com.renatosanz.artxplorer.domain.usecase.GetSavedArtworksUseCase
+import com.renatosanz.artxplorer.logDebug
 import kotlinx.coroutines.launch
 
 class SavedArtworksViewModel(
@@ -30,10 +30,10 @@ class SavedArtworksViewModel(
         viewModelScope.launch {
             _loading.value = true
             getSavedArtworksUseCase().fold(onSuccess = { data ->
-                Log.d("SavedArtworksViewModel", "saved artworks: $data")
+                logDebug("SavedArtworksViewModel", "saved artworks: $data")
                 _savedArtworks.value = data
             }, onFailure = { exception ->
-                _error.value = exception.message
+                _error.value = "Couldn't load saved artworks. Please try again."
             })
             _loading.value = false
         }

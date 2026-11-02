@@ -3,7 +3,6 @@ package com.renatosanz.artxplorer.presentation.screens.detail
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import com.renatosanz.artxplorer.R
 import com.renatosanz.artxplorer.data.local.entities.ArtworkEntity
 import com.renatosanz.artxplorer.databinding.ActivityArtworkDetailsBinding
 import com.renatosanz.artxplorer.databinding.AlertDialogDeleteSavedArtworkBinding
+import com.renatosanz.artxplorer.logDebug
 import com.renatosanz.artxplorer.presentation.screens.adapters.RecommendationAdapter
 import com.renatosanz.artxplorer.presentation.screens.fullscreen.FullScreenViewerActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -26,13 +26,13 @@ class ArtworkDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("ArtworkDetails", "Starting ArtworkDetailsActivity")
+        logDebug("ArtworkDetails", "Starting ArtworkDetailsActivity")
         binding = ActivityArtworkDetailsBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
         val id = intent.getLongExtra("ARTWORK_ID", -1L)
-        Log.d("ArtworkDetails", "id recibido $id")
+        logDebug("ArtworkDetails", "id recibido $id")
 
         val recommendationAdapter = RecommendationAdapter()
         recommendationAdapter.setCallback { recommended ->
@@ -45,7 +45,7 @@ class ArtworkDetailsActivity : AppCompatActivity() {
         binding.rvRecommendations.adapter = recommendationAdapter
 
         viewModel.artwork.observe(this) { artwork ->
-            Log.d("ArtworkDetails", "Artwork received: $artwork")
+            logDebug("ArtworkDetails", "Artwork received: $artwork")
             artwork?.let { setupUI(it) }
         }
         viewModel.recommendations.observe(this) { recommendations ->
@@ -61,16 +61,16 @@ class ArtworkDetailsActivity : AppCompatActivity() {
         }
 
         viewModel.loading.observe(this) { loading ->
-            Log.d("ArtworkDetails", "Loading: $loading")
+            logDebug("ArtworkDetails", "Loading: $loading")
             binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
         }
 
         viewModel.error.observe(this) { e ->
-            Log.d("ArtworkDetails", "algo salio mal: $e")
+            logDebug("ArtworkDetails", "algo salio mal: $e")
             Toast.makeText(this, e, Toast.LENGTH_SHORT).show()
         }
         viewModel.msgToast.observe(this) { e ->
-            Log.d("ArtworkDetails", "$e")
+            logDebug("ArtworkDetails", "$e")
             Toast.makeText(this, e, Toast.LENGTH_SHORT).show()
         }
 
