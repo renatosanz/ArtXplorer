@@ -15,6 +15,12 @@ ArtXplorer is a small, focused client for the [Art Institute of Chicago API](htt
 - **Download** — save an artwork as a JPEG to the device's Pictures folder.
 - **Settings** — system/light/dark theme, saved-artwork count, clearing all saved artworks, version info and links.
 
+## Screenshots
+
+| Home                                        | Search                                           | Artwork details                                            | Settings                                       | My Collection                                          |
+|---------------------------------------------|--------------------------------------------------|------------------------------------------------------------|---------------------------------------------------------|--------------------------------------------------------|
+| ![Home screen](./docs/screenshots/home.jpg) | ![Search results](./docs/screenshots/search.jpg) | ![Artwork details](./docs/screenshots/artwork-details.jpg) | ![Settings](./docs/screenshots/settings.jpg) | ![My Collection](./docs/screenshots/my-collection.jpg) |
+
 ## Requirements
 
 - Android Studio (latest stable) with the Android SDK 36 platform
