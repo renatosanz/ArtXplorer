@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 // shortcut: opens the Buy Me a Coffee homepage, replace with your own profile URL
-private const val BUY_ME_A_COFFEE_URL = "https://www.buymeacoffee.com/"
+private const val BUY_ME_A_COFFEE_URL = "https://www.buymeacoffee.com/renatosanz"
 private const val GITHUB_URL = "https://github.com/renatosanz/ArtXplorer"
 private const val PORTFOLIO_URL = "https://portfolio.riprtx.uk/"
 
