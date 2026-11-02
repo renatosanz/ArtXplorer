@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="@font/eb_garamond_font"
-            android:maxLines="2"
+            android:maxLines="1"
             android:padding="8dp"
             android:textColor="?attr/colorOnSurface"
             android:textSize="13sp"
