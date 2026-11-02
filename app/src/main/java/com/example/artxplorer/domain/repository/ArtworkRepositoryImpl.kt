@@ -104,6 +104,43 @@ class ArtworkRepositoryImpl(
         }
     }
 
+    override suspend fun getRecommendations(
+        artistId: Long,
+        excludeArtworkId: Long
+    ): Result<List<Artwork>> {
+        return try {
+            // Two tiny requests: page 1 carries the total and doubles as candidate pool,
+            // the random page adds variety. Both are capped at 4 items, fields trimmed.
+            val firstPage = apiService.getArtworksByArtist(artistId, page = 1)
+            val pageCount = ((firstPage.pagination.total + 3) / 4).toInt()
+            val randomPage = if (pageCount > 1) {
+                apiService.getArtworksByArtist(
+                    artistId,
+                    page = Random.nextInt(2, pageCount + 1)
+                )
+            } else null
+
+            val picks = (firstPage.data + randomPage?.data.orEmpty())
+                .distinctBy { it.id }
+                .filter { it.id != excludeArtworkId }
+                .shuffled()
+                .take(3)
+                .map {
+                    Artwork(
+                        id = it.id,
+                        title = it.title ?: "No title",
+                        artist = it.artistTitle.orEmpty(),
+                        imageId = it.imageId,
+                        dateDisplay = it.dateDisplay
+                    )
+                }
+            Result.success(picks)
+        } catch (e: Exception) {
+            Log.d("ArtworkRepositoryImpl", "recommendations error: $e")
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getSavedArtwoks(): Result<List<Artwork>> {
         return try {
             val data = artworkDao.getAll()

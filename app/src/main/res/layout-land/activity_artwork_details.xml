@@ -12,12 +12,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="300dp"
-                android:layout_height="match_parent">
+                android:layout_height="400dp">
 
                 <ImageView
                     android:id="@+id/ivDetailArtwork"
@@ -51,7 +51,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp">
 
@@ -124,6 +124,26 @@
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="Dimensions: 73.7 cm × 92.1 cm" />
 
+                <TextView
+                    android:id="@+id/tvDetailStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:visibility="gone"
+                    tools:text="Style: contemporary"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvDetailClassification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:visibility="gone"
+                    tools:text="Classification: painting, modern and contemporary art"
+                    tools:visibility="visible" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -149,6 +169,55 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     tools:text="Description text..." />
+
+                <TextView
+                    android:id="@+id/tvCreditLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    tools:text="Credit line: Purchased with funds provided by Mary P. Hines in memory of her mother, Frances W. Pick"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvRecommendationsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:alpha="0.7"
+                    android:textAllCaps="true"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:text="More by Alma Thomas"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvRecommendations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_recommendation"
+                    tools:orientation="horizontal" />
+
+                <TextView
+                    android:id="@+id/tvCopyright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:alpha="0.6"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="11sp"
+                    android:visibility="gone"
+                    tools:text="© Estate of Alma Thomas (Courtesy of the Hart Family) / Artists Rights Society (ARS), New York"
+                    tools:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

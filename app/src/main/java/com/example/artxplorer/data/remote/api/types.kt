@@ -65,3 +65,19 @@ data class SingleArtwork(
     val info: ExtraInfo,
     val config: ApiConfig
 )
+
+data class ArtistArtworks(
+    val pagination: Pagination,
+    val data: List<RecommendationDto>
+)
+
+data class RecommendationDto(
+    val id: Long,
+    val title: String?,
+    @SerializedName("image_id")
+    val imageId: String?,
+    @SerializedName("date_display")
+    val dateDisplay: String?,
+    @SerializedName("artist_title")
+    val artistTitle: String?
+)

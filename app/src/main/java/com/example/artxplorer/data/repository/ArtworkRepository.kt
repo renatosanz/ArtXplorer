@@ -20,6 +20,7 @@ interface ArtworkRepository {
     suspend fun getArtwork(id: Long): Result<GetArtworkResult>
     suspend fun getRandomArtwork(randomMax: Long): Result<Artwork>
     suspend fun getHomePage(page: Int): Result<HomePageArtworks>
+    suspend fun getRecommendations(artistId: Long, excludeArtworkId: Long): Result<List<Artwork>>
 
     suspend fun getSavedArtwoks(): Result<List<Artwork>>
     suspend fun searchArtworkByName(query: String): Result<SearchArtworks>

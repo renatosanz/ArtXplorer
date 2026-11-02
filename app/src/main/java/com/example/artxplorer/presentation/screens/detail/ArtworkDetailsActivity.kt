@@ -7,11 +7,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil3.load
 import com.example.artxplorer.R
 import com.example.artxplorer.data.local.entities.ArtworkEntity
 import com.example.artxplorer.databinding.ActivityArtworkDetailsBinding
 import com.example.artxplorer.databinding.AlertDialogDeleteSavedArtworkBinding
+import com.example.artxplorer.presentation.screens.adapters.RecommendationAdapter
 import com.example.artxplorer.presentation.screens.fullscreen.FullScreenViewerActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,9 +34,24 @@ class ArtworkDetailsActivity : AppCompatActivity() {
         val id = intent.getLongExtra("ARTWORK_ID", -1L)
         Log.d("ArtworkDetails", "id recibido $id")
 
+        val recommendationAdapter = RecommendationAdapter()
+        recommendationAdapter.setCallback { recommended ->
+            startActivity(Intent(this, ArtworkDetailsActivity::class.java).apply {
+                putExtra("ARTWORK_ID", recommended.id)
+            })
+        }
+        binding.rvRecommendations.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvRecommendations.adapter = recommendationAdapter
+
         viewModel.artwork.observe(this) { artwork ->
             Log.d("ArtworkDetails", "Artwork received: $artwork")
             artwork?.let { setupUI(it) }
+        }
+        viewModel.recommendations.observe(this) { recommendations ->
+            binding.tvRecommendationsTitle.isVisible = recommendations.isNotEmpty()
+            binding.rvRecommendations.isVisible = recommendations.isNotEmpty()
+            recommendationAdapter.submitList(recommendations)
         }
         viewModel.isSaved.observe(this) { isSaved ->
             isSaved.let {
@@ -71,6 +89,7 @@ class ArtworkDetailsActivity : AppCompatActivity() {
     private fun setupUI(artwork: ArtworkEntity) {
         binding.tvDetailTitle.text = artwork.title
         binding.tvDetailArtist.text = artwork.artist
+        binding.tvDetailDate.text = artwork.dateDisplay
         binding.tvDetailDescription.text =
             Html.fromHtml(artwork.description, Html.FROM_HTML_MODE_COMPACT)
 
@@ -78,7 +97,31 @@ class ArtworkDetailsActivity : AppCompatActivity() {
 
         binding.tvDetailMedium.text = "Medium: ${artwork.mediumDisplay}"
         binding.tvDetailOrigin.text = "Place: ${artwork.placeOfOrigin}"
-        binding.tvDetailDimensions.text = "Dimentions: ${artwork.dimentions}"
+        binding.tvDetailDimensions.text = "Dimensions: ${artwork.dimentions}"
+
+        artwork.styleTitle?.takeIf { it.isNotBlank() }?.let {
+            binding.tvDetailStyle.text = getString(R.string.style_format, it)
+            binding.tvDetailStyle.isVisible = true
+        }
+        artwork.classificationTitles?.takeIf { it.isNotBlank() }?.let {
+            binding.tvDetailClassification.text = getString(R.string.classification_format, it)
+            binding.tvDetailClassification.isVisible = true
+        }
+        artwork.creditLine?.takeIf { it.isNotBlank() }?.let {
+            binding.tvCreditLine.text = getString(R.string.credit_line_format, it)
+            binding.tvCreditLine.isVisible = true
+        }
+        artwork.copyrightNotice?.takeIf { it.isNotBlank() }?.let {
+            binding.tvCopyright.text = it
+            binding.tvCopyright.isVisible = true
+        }
+
+        val artistName = artwork.artist.substringBefore('\n').trim()
+        binding.tvRecommendationsTitle.text = if (artistName.isBlank()) {
+            getString(R.string.more_artworks)
+        } else {
+            getString(R.string.more_by_artist, artistName)
+        }
 
         // if no image id, then should disable artwork actions and display fallback image
         if (artwork.imageId?.lowercase().equals("noimage")) {

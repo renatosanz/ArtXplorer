@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.artxplorer.data.local.entities.ArtworkEntity
 import com.example.artxplorer.data.repository.GetArtworkResult
+import com.example.artxplorer.domain.model.Artwork
 import com.example.artxplorer.domain.usecase.DeleteArtworkLocalUseCase
+import com.example.artxplorer.domain.usecase.GetArtistRecommendationsUseCase
 import com.example.artxplorer.domain.usecase.GetArtworkDetailUseCase
 import com.example.artxplorer.domain.usecase.SaveArtworkLocalUseCase
 import com.example.artxplorer.data.common.saveImageToCache
@@ -17,11 +19,15 @@ import kotlinx.coroutines.launch
 class ArtworkDetailsViewModel(
     private val getArtworkDetailUseCase: GetArtworkDetailUseCase,
     private val saveArtworkLocalUseCase: SaveArtworkLocalUseCase,
-    private val deleteArtworkLocalUseCase: DeleteArtworkLocalUseCase
+    private val deleteArtworkLocalUseCase: DeleteArtworkLocalUseCase,
+    private val getArtistRecommendationsUseCase: GetArtistRecommendationsUseCase
 ) : ViewModel() {
 
     private val _artworkData = MutableLiveData<ArtworkEntity>()
     val artwork: LiveData<ArtworkEntity> = _artworkData
+
+    private val _recommendations = MutableLiveData<List<Artwork>>()
+    val recommendations: LiveData<List<Artwork>> = _recommendations
 
     private val _isSaved = MutableLiveData<Boolean>()
     val isSaved: LiveData<Boolean> = _isSaved
@@ -38,17 +44,21 @@ class ArtworkDetailsViewModel(
     fun loadArtworkDetails(artworkId: Long) {
         viewModelScope.launch {
             _loading.value = true
+            _recommendations.value = emptyList()
+            var artistId: Long? = null
             getArtworkDetailUseCase(artworkId).fold(onSuccess = {
                 print("artwork recieved: $it")
                 when (it) {
                     is GetArtworkResult.FoundOnLocal -> {
                         _isSaved.value = true
                         _artworkData.value = it.artworkEntity
+                        artistId = it.artworkEntity.artistId
                     }
 
                     is GetArtworkResult.FoundOnApi -> {
                         _isSaved.value = false
                         _artworkData.value = it.artwork.toEntity()
+                        artistId = it.artwork.artistId
                     }
 
                     else -> {
@@ -59,6 +69,11 @@ class ArtworkDetailsViewModel(
                 _error.value = it.message
             })
             _loading.value = false
+            // Secondary content: failures just leave the section hidden.
+            artistId?.let { id ->
+                getArtistRecommendationsUseCase(id, artworkId)
+                    .onSuccess { _recommendations.value = it }
+            }
         }
     }
 

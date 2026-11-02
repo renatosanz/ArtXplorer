@@ -14,7 +14,12 @@ data class Artwork(
     val mediumDisplay: String? = null,
     val dateStart: Int? = null,
     val dateEnd: Int? = null,
-    val dateDisplay: String? = null
+    val dateDisplay: String? = null,
+    val artistId: Long? = null,
+    val creditLine: String? = null,
+    val copyrightNotice: String? = null,
+    val styleTitle: String? = null,
+    val classificationTitles: String? = null
 ) {
     fun toEntity(): ArtworkEntity {
         return ArtworkEntity(
@@ -29,6 +34,11 @@ data class Artwork(
             dateStart = dateStart,
             dateEnd = dateEnd,
             dateDisplay = dateDisplay,
+            artistId = artistId,
+            creditLine = creditLine,
+            copyrightNotice = copyrightNotice,
+            styleTitle = styleTitle,
+            classificationTitles = classificationTitles,
             localImagePath = null
         )
     }

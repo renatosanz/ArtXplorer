@@ -18,6 +18,11 @@ data class ArtworkEntity(
     @ColumnInfo(name = "date_start") val dateStart: Int?,
     @ColumnInfo(name = "date_end") val dateEnd: Int?,
     @ColumnInfo(name = "date_display") val dateDisplay: String?,
+    @ColumnInfo(name = "artist_id") val artistId: Long?,
+    @ColumnInfo(name = "credit_line") val creditLine: String?,
+    @ColumnInfo(name = "copyright_notice") val copyrightNotice: String?,
+    @ColumnInfo(name = "style_title") val styleTitle: String?,
+    @ColumnInfo(name = "classification_titles") val classificationTitles: String?,
     @ColumnInfo(name = "local_image_path ") val localImagePath: String?
 ) {
     fun toDomain(): Artwork {
@@ -32,7 +37,12 @@ data class ArtworkEntity(
             mediumDisplay = mediumDisplay,
             dateStart = dateStart,
             dateEnd = dateEnd,
-            dateDisplay = dateDisplay
+            dateDisplay = dateDisplay,
+            artistId = artistId,
+            creditLine = creditLine,
+            copyrightNotice = copyrightNotice,
+            styleTitle = styleTitle,
+            classificationTitles = classificationTitles
         )
     }
 }
