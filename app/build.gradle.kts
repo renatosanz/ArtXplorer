@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.artxplorer"
+    namespace = "com.renatosanz.artxplorer"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.artxplorer"
+        applicationId = "com.renatosanz.artxplorer"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
