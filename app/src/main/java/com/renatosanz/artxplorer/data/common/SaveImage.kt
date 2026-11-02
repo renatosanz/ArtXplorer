@@ -18,6 +18,17 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
+// Titles come from the API; strip anything that could act as a path separator,
+// control character or hidden-file prefix, and keep the name a sane length.
+private val UNSAFE_FILE_CHARS = Regex("[^\\p{L}\\p{N} _-]")
+
+private fun safeImageFileName(title: String): String =
+    title.trim()
+        .replace(UNSAFE_FILE_CHARS, "_")
+        .trim('_', ' ')
+        .take(64)
+        .ifBlank { "artwork" }
+
 
 suspend fun saveImageToGallery(context: Context, imageUrl: String, title: String): Result<Uri> {
     return withContext(Dispatchers.IO) {
@@ -29,7 +40,7 @@ suspend fun saveImageToGallery(context: Context, imageUrl: String, title: String
 
             // 2. Guardar en galería con MediaStore
             val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "$title.jpg")
+                put(MediaStore.Images.Media.DISPLAY_NAME, "${safeImageFileName(title)}.jpg")
                 put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                 put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }
@@ -58,7 +69,7 @@ suspend fun saveImageToCache(context: Context, imageUrl: String, title: String):
             val bitmap = (result.image)?.toBitmap()
 
             val imagesDir = File(context.filesDir, "artworks").apply { mkdirs() }
-            val file = File(imagesDir, "$title.jpg")
+            val file = File(imagesDir, "${safeImageFileName(title)}.jpg")
 
             FileOutputStream(file).use { stream ->
                 bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
