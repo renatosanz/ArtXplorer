@@ -35,7 +35,7 @@ Open the project in Android Studio and press **Run**, or build and install from 
 ./gradlew installDebug
 ```
 
-This builds the debug APK and installs it on the connected device or emulator. Run `./gradlew assembleDebug` instead if you only want the APK.
+This builds the debug APK and installs it on the connected device or emulator. Run `./gradlew assembleDebug` instead if you only want the APK; AGP 9 writes it under `app/build/intermediates/apk/debug/`.
 
 On Windows use `gradlew.bat` instead of `./gradlew`.
 
