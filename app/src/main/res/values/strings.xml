@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ArtXplorer</string>
+    <string name="artxplorer">ArtXplorer</string>
+    <string name="search_artworks">Search Artworks</string>
+    <string name="search_artworks_label">Search artworks, artists...</string>
+    <string name="application_settings_desc_btn">Application Settings</string>
+    <string name="view_saved_artworks_desc_btn">View saved artworks</string>
+    <string name="previous_label_btn">Previous</string>
+    <string name="next_label_btn">Next</string>
+    <string name="my_collection">My Collection</string>
+    <string name="settings">Settings</string>
+    <string name="appearance_section">Appearance</string>
+    <string name="theme_label">Theme</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="storage_section">Storage</string>
+    <string name="saved_artworks_label">Saved artworks</string>
+    <string name="clear_cache_description">Delete all artworks saved on this device.</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="clear_cache_confirm_title">Clear saved artworks?</string>
+    <string name="clear_cache_confirm_message">All artworks saved on this device will be deleted. This cannot be undone.</string>
+    <string name="clear_cache_done">Saved artworks deleted</string>
+    <string name="about_section">About</string>
+    <string name="about_built_by">Built by Renato Sanchez</string>
+    <string name="github">GitHub</string>
+    <string name="portfolio">Portfolio</string>
+    <string name="version_format">Version %1$s</string>
+    <string name="buy_me_a_coffee">Buy me a coffee</string>
+    <string name="no_app_found">No app available to open this link</string>
+</resources>
