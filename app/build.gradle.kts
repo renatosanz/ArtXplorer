@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     id("kotlin-parcelize")
@@ -20,12 +23,38 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            val properties = Properties()
+            val propertiesFile = project.rootProject.file("local.properties")
+
+            if (propertiesFile.exists()) {
+                properties.load(FileInputStream(propertiesFile))
+
+                // sdk.dir alone is a normal local.properties; only sign when keys exist.
+                properties.getProperty("RELEASE_STORE_FILE")?.let { storeFilePath ->
+                    storeFile = file(storeFilePath)
+                    storePassword = properties.getProperty("RELEASE_STORE_PASSWORD")
+                    keyAlias = properties.getProperty("RELEASE_KEY_ALIAS")
+                    keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD")
+                }
+            }
+        }
+    }
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
+
+            // Assign the secure configuration only when a keystore is configured,
+            // so contributors and CI can still build an unsigned release.
+            signingConfigs.getByName("release")
+                .takeIf { it.storeFile != null }
+                ?.let { signingConfig = it }
         }
     }
 
