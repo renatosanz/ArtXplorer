@@ -1,11 +1,16 @@
 package com.renatosanz.artxplorer.presentation.screens.detail
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil3.load
@@ -23,6 +28,24 @@ import kotlin.getValue
 class ArtworkDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityArtworkDetailsBinding
     private val viewModel: ArtworkDetailsViewModel by viewModel()
+
+    // Holds the artwork URL while the permission dialog is up.
+    private var pendingDownloadUrl: String? = null
+
+    private val storagePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            val url = pendingDownloadUrl
+            pendingDownloadUrl = null
+            if (granted && url != null) {
+                viewModel.saveArtworkToDevice(this, url)
+            } else {
+                Toast.makeText(
+                    this,
+                    "Storage permission is needed to save to Pictures",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +100,13 @@ class ArtworkDetailsActivity : AppCompatActivity() {
 
         viewModel.loadArtworkDetails(id)
     }
+
+    // API 29+ writes to Pictures through MediaStore without a runtime permission.
+    private fun needsStoragePermission(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
 
     private fun goToFullScreenViewer(imageUrl: String) {
         val context = binding.root.context
@@ -160,7 +190,12 @@ class ArtworkDetailsActivity : AppCompatActivity() {
             ?: "https://www.artic.edu/iiif/2/${artwork.imageId}/full/843,/0/default.jpg"
         binding.ivDetailArtwork.load(imageUrl)
         binding.downloadArtworkBtn?.setOnClickListener {
-            viewModel.saveArtworkToDevice(this@ArtworkDetailsActivity, imageUrl)
+            if (needsStoragePermission()) {
+                pendingDownloadUrl = imageUrl
+                storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            } else {
+                viewModel.saveArtworkToDevice(this@ArtworkDetailsActivity, imageUrl)
+            }
         }
         binding.fabSave.setOnClickListener {
             viewModel.saveArtworkLocal(this, imageUrl)

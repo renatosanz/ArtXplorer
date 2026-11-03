@@ -110,8 +110,9 @@ class ArtworkDetailsViewModel(
         val currentArtwork = _artworkData.value
         if (currentArtwork != null) {
             viewModelScope.launch {
-                saveImageToGallery(context, imageUrl, currentArtwork.title)
-                _msgToast.value = "Artwork saved on Pictures"
+                saveImageToGallery(context, imageUrl, currentArtwork.title).fold(
+                    onSuccess = { _msgToast.value = "Artwork saved on Pictures" },
+                    onFailure = { _error.value = "Couldn't save the artwork. Please try again." })
             }
         } else {
             _error.value = "No hay datos de la obra para guardar todavía."

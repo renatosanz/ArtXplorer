@@ -3,8 +3,9 @@ package com.renatosanz.artxplorer.data.common
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
@@ -35,22 +36,38 @@ suspend fun saveImageToGallery(context: Context, imageUrl: String, title: String
         try {
             // 1. Descargar imagen con Coil
             val request = ImageRequest.Builder(context).data(imageUrl).build()
-            val result = context.imageLoader.execute(request)
-            val bitmap = (result.image)?.toBitmap()
+            val bitmap = context.imageLoader.execute(request).image?.toBitmap()
+                ?: return@withContext Result.failure(Exception("Couldn't load the image"))
 
             // 2. Guardar en galería con MediaStore
-            val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, "${safeImageFileName(title)}.jpg")
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            }
+            val fileName = "${safeImageFileName(title)}.jpg"
+            val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
 
-            val uri = context.contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
-            ) ?: return@withContext Result.failure(Exception("Error al guardar imagen"))
+                val inserted = context.contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
+                ) ?: return@withContext Result.failure(Exception("Error al guardar imagen"))
 
-            context.contentResolver.openOutputStream(uri)?.use { stream ->
-                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                context.contentResolver.openOutputStream(inserted)?.use { stream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                }
+                inserted
+            } else {
+                // RELATIVE_PATH and scoped storage only exist from API 29; older versions
+                // need the permission requested on the details screen plus a manual scan.
+                val file = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    fileName
+                )
+                FileOutputStream(file).use { stream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                }
+                MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), null, null)
+                Uri.fromFile(file)
             }
             logDebug("saveImageToGallery", "imagen guardada correctamente: $uri")
             Result.success(uri)
