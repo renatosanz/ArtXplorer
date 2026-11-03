@@ -57,8 +57,9 @@ val presentationModule = module {
 }
 
 
-// Room can't add columns on its own here (schema export is off), so migrate by hand
-// instead of letting fallbackToDestructiveMigration wipe the user's saved artworks.
+// Schema export is off, so migrations are written by hand. There is deliberately no
+// fallbackToDestructiveMigration: a missing migration must fail loudly, never wipe the
+// user's saved collection.
 private val MIGRATION_3_4 = object : Migration(3, 4) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE artwork ADD COLUMN artist_id INTEGER")
@@ -75,7 +76,7 @@ fun provideDataBase(application: Application): AppDatabase =
         AppDatabase::class.java,
         "table_post"
     ).addMigrations(MIGRATION_3_4)
-        .fallbackToDestructiveMigration(true).allowMainThreadQueries().build()
+        .allowMainThreadQueries().build()
 
 fun provideArtworkDao(postDataBase: AppDatabase): ArtworkDao = postDataBase.artworkDao()
 
